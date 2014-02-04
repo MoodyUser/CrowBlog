@@ -27,5 +27,3 @@ class Post(models.Model):
         return reverse('post', args=(
             self.id,
         ))
-
-
