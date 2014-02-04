@@ -1,4 +1,7 @@
+from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
 
 
 class Post(models.Model):
@@ -9,3 +12,20 @@ class Post(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+    def wikitext(self):
+        lines = self.content.splitlines()
+        s = "".join(["<li>{}</li>".format(escape(line)) for line in lines])
+        return mark_safe("<ul>{}</ul>".format(s))
+
+    def get_absolute_url(self):
+        if self.slug:
+            return reverse('post_by_slug', args=(
+                self.slug,
+            ))
+        return reverse('post', args=(
+            self.id,
+        ))
+
+
